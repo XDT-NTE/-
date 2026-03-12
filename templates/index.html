@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>校内网盘</title>
+    <!-- Custom Theme files -->
+    <link href="/static/css/updatefile/style.css" rel="stylesheet" type="text/css" media="all"/>
+    <!-- Custom Theme files -->
+    <script src="/static/js/updatefile/jquery.min.js"></script>
+    <!-- Custom Theme files -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="keywords" content="File Upload Widget Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template,
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony Ericsson, Motorola web design"/>
+    <script type="application/x-javascript"> addEventListener("load", function () {
+        setTimeout(hideURLbar, 0);
+    }, false);
+
+    function hideURLbar() {
+        window.scrollTo(0, 1);
+    } </script>
+
+</head>
+<body>
+
+<h1>网盘上传</h1>
+<div id="join_Web">
+<a href="http://192.168.234.141:8080">进入网盘</a>
+</div>
+<div class="upload">
+    <h3>选择文件</h3>
+    <div class="login-form">
+        <form id="upload" method="post" action="/upload" enctype="multipart/form-data">
+            <div>
+                <span>储存的文件夹</span>
+                <input type="text" class="title" name="dirname" placeholder="储存到的文件夹名" value="" onfocus="this.value = '';"
+                       onblur="if (this.value == '') {this.value = '';}"/>
+            </div>
+            <div>
+                <span>储存密令</span>
+                <input type="password" class="describe" name="ml" placeholder="密令ID"  value="" onfocus="this.value = '';"
+                       onblur="if (this.value == '') {this.value = '';}"/>
+            </div>
+            <div id="drop">
+                <a>上传</a>
+                <input type="file" name="upl" multiple/>
+            </div>
+            <ul>
+                <!-- The file uploads will be shown here -->
+            </ul>
+
+        </form>
+    </div>
+
+    <!-- JavaScript Includes -->
+    <script src="/static/js/updatefile/jquery.knob.js"></script>
+    <!-- JavaScript Includes -->
+
+    <!-- jQuery File Upload Dependencies -->
+    <script src="/static/js/updatefile/jquery.ui.widget.js"></script>
+    <script src="/static/js/updatefile/jquery.iframe-transport.js"></script>
+    <script src="/static/js/updatefile/jquery.fileupload.js"></script>
+    <!-- jQuery File Upload Dependencies -->
+
+    <!-- Main JavaScript file -->
+    <script src="/static/js/updatefile/script.js"></script>
+    <!-- Main JavaScript file -->
+
+</div>
+
+<div class="footer">
+    <p>Version &copy; 0.0.26 <a href="http://baidu.com">陈状</a></p>
+</div>
+
+</body>
+</html>

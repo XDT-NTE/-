@@ -1,0 +1,406 @@
+﻿一、数据库操作
+
+1. 打开DOS命令提示符
+
+2. 进入bin目录
+	cd\mysql-8.0.12-winx64\bin
+	
+3. 启动服务
+	net start mysql
+
+4. 创建连接
+	mysql -u root -p
+	
+###################################################操作开始####################################################################
+5. 查看现有的数据库
+	show databases;
+	
+6. 创建数据库XSCJ
+	create database XSCJ;
+	
+7. 查看创建的数据库XSCJ
+	show create database XSCJ;
+	
+8. 使用指定的utf8字符编辑创建数据库ZGGZ
+	create database if not exists ZGGZ default character set = 'utf8';
+	
+9. 查看创建的数据库ZGGZ
+	show create database ZGGZ;
+	
+10. 切换/打开数据库 mysql
+	use mysql;
+
+11. 显示当前数据库中的表
+	show tables;
+
+12. 切换/打开数据库XSCJ
+	use XSCJ;
+
+13. 修改数据的编码方式为utf8
+	alter database XSCJ default character set utf8 collate utf8_bin;
+	
+14. 切换至数据库 XSCJ
+	use xscj;
+
+15. 显示当前数据库的表
+	show tables;
+
+16. 查看现有的数据库
+	show databases;
+
+17. 删除数据库ZGGZ
+	drop database zggz;
+	
+18. 删除数据库XSCJ
+	drop database xscj;
+	
+19. 查看现有的数据库
+	show databases;
+
+20. 退出mysql
+	exit;
+	
+********************************************************\\\\二、数据表的操作////*****************************************************
+1. 启动 mysql，进入mysql提示符
+	
+2. 创建数据库 BookStore
+	create database if not exists BookStore character set utf8 collate utf8_bin;
+	
+3. 切换数据库
+	use BookStore; 
+	#use 数据库名；
+4. 在数据库 BookStore 中创建数据表 author
+	create table if not exists Author (
+	#判断是否存在数据表，存在即删除再进行建表，不存在直接建表；
+	例：create table if not exists 表名(
+		#然后
+	                字段名 字段类型,
+		id int,
+		name varchar(20),
+		sex varchar(2),
+		tele varchar(12),
+		addr varchar(50),
+		note text
+	)engine=InnoDB character set utf8 collate utf8_bin;
+	#
+5. 查看表（基本结构）： desc
+	desc author;
+	译：desc 表名;
+
+6. 查看表（详细结构）： show create table 
+	show create table author;
+	译：show create table 表名;
+
+^^^^^7. 修改表
+	1) 将 id 设置为主键、自增值约束
+		alter table author change id id int primary key auto_increment;
+		译：alter table 表名 change 旧字段名 字段类型 主键 自增约束;		
+		
+	2) 将字段 id 改名为 a_id，注意要保留该字段原有的约束条件
+		alter table author change id a_id int auto_increment;
+		译：alter table 表名 change 旧字段名  新字段名 新数据类型 原有的自增约束;
+		
+	3) 对 name、tele 设置非空约束
+		alter table author change name name varchar (20) not null;
+		alter table author change tele tele varchar (20) not null;
+
+	4) 对 note 设置默认值为 “当前没啥好说的。”
+		alter table author change note note text default('当前没啥好说的。');
+		译：alter table 表名 change 字段名  字段名 字段类型 默认约束
+
+	5) 将 tele 字段名改为 telephone
+		alter table author change tele telephone varchar(20);  
+		注意上面的命令将 tele 改名后，它的非空约束也会取消，因为修改时不会保留旧有的约束设置，如果要仍然需要非空约束，则此命令行需要加上非空约束
+		alter table author change telephone telephone varchar(20) not null;
+
+	6) 将字段 sex 的数据类型修改为 char(2)
+		alter table author modify sex char(2);
+		译：alter table 表名 modify 需要修改的字段名 需要的字段类型;
+	
+	7) 将 telephone 字段调整位置到 note 前（first:将前字段改为第一字段/after:把前字段放到后字段后面）
+		alter table author modify note text after telephone;
+		解释：把note字段放到telephon字段后面;
+		译：alter table 表名 modify 前字段名 前字段类型 first/after 后字段;
+
+	8) 在字段 sex 后插入字段 age int(2) 默认值 0
+		alter table author add age int(2) default 0 after sex;
+		译：alter table 表名 	add 字段名 字段类型 默认约束 插入 sex后;		
+
+	9) 将字段 sex 删除
+		alter table author drop sex;
+		译：alter table 删除字段的表名 drop 需要删除的字段名;
+
+	10) 更改表的存储引擎
+		alter table author engine=MyISAM;
+
+	11) 删除表的外键约束
+		alter table author drop foreign key 外键名;
+		译：alter table 表名 
+		
+	12)修改缺省的表字符集
+		ALTER TABLE author DEFAULT CHARACTER SET gbk;
+		如果用户想改变表的默认字符集和所有的字符列的字符集到一个新的字符集，使用下面的语句：
+		ALTER TABLE tbl_name CONVERT TO CHARACTER SET charset_name;
+
+{https://blog.csdn.net/xrt95050/article/details/5630972}		
+
+
+修改数据库字符集：
+ALTER DATABASE db_name DEFAULT CHARACTER SET character_name [COLLATE ...];
+
+
+把表默认的字符集和所有字符列（CHAR,VARCHAR,TEXT）改为新的字符集：
+ALTER TABLE tbl_name CONVERT TO CHARACTER SET character_name [COLLATE ...]
+如：ALTER TABLE logtest CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+只是修改表的默认字符集：
+ALTER TABLE tbl_name DEFAULT CHARACTER SET character_name [COLLATE...];
+如：ALTER TABLE logtest DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+修改字段的字符集：
+ALTER TABLE tbl_name CHANGE c_name c_name CHARACTER SET character_name [COLLATE ...];
+如：ALTER TABLE logtest CHANGE title title VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+查看数据库编码：
+show create database db_name;
+		     数据库名
+查看表编码：
+show create table tbl_name;
+	               表名
+查看字段编码：
+show full columns from tbl_name;		   字段名
+
+
+8. 在数据库 BookStore 中创建数据表 publiser，注意以下几点：
+	A. 将p_id 设置为主键约束，且自增
+	B. p_name 设置非空约束
+	执行代码: create table if not exists publiser (
+		  # 判断该表是否存在          表名
+			p_id int primary key auto_increment,
+		              字段名 字段类型  主键约束      自增
+			p_name varchar(20) not null
+			字段名     字段类型       非空约束
+		)engine=InnoDB character set utf8 collate utf8_bin;
+
+9. 在数据库 BookStore 中创建数据表 Book，注意以下几点：
+	A. 将 b_id 设置为主键约束
+	B. 对 b_name、author以及 ISBN 进行非空约束
+	C. 对 in_date 进行默认约束，默认值为当前系统日期
+	D. 对 b_id 进行值自动增加约束
+	E. 设置 p_id 为外键，与之相关联的是publiser表中的主键p_id
+		create table if not exists Book (
+		 # 判断该表是否存在          表名
+			b_id int primary key auto_increment,
+			字段名 字段类型 设置主键约束 自增
+			b_name varchar(20) not null,
+			字段名    字段类型        非空约束
+			author varchar(8) not null, 
+			字段名   字段类型    非空约束
+			p_id int,
+			字段名 字段类型
+			ISBN varchar(17) not null,
+			字段名 字段类型    非空约束  
+			pub_date date,
+			设置日期默认约束
+			in_date date default(current_date),
+			字段名   字段类型    设置默认约束
+			constraint p_id foreign key (p_id) references publiser(p_id)
+			设置           p_id字段为外键           连接该字段的是（references表中的P_id）
+		)engine=InnoDB character set utf8 collate utf8_bin;
+
+10. 查看表基本结构 desc
+	desc book;
+	desc   表名
+
+11. 查看表详细结构 show create table 
+	show create table book;
+	show caeate table  表名
+
+12. 创建表 reader，结构如图
+	create table if not exists reader (
+		r_id int primary key auto_increment,
+		name varchar(20) not null,
+		telephone varchar(20) not null, 
+		address varchar(50) not null,
+		reg_date date default(current_date)
+	)engine=InnoDB character set utf8 collate utf8_bin;
+
+三、索引
+1. 在创建表的时候创建索引
+	create table 表名 (
+		属性名1 数据类型 [完整性约束条件],
+		属性名2 数据类型 [完整性约束条件],
+		...
+		属性名 数据类型 [完整性约束条件],
+		[unique|fulltext|spatial] index|key [别名](属性名1[(长度)][ASC|DESC])
+	)engine=InnoDB character set utf8 collate utf8_bin;
+	
+	1) 创建普通索引(不需要加任何unique,fulltext,spatial参数)
+		***例：创建一个表index1，在表中的id字段上建立索引
+		create table index1 (
+			id int,
+			name varchar(20),
+			sex boolean,
+			index(id)
+		)engine=InnoDB character set utf8 collate utf8_bin;
+	
+		show create table index1;
+		explain select * from index1 where id=1 \G;
+	
+	{
+		https://blog.csdn.net/lvhaizhen/article/details/90763799
+		
+		mysql 用法 Explain
+		explain（执行计划），使用explain关键字可以模拟优化器执行sql查询语句，从而知道MySQL是如何处理sql语句。explain主要用于分析查询语句或表结构的性能瓶颈
+	。
+		A.explain的作用
+		通过explain+sql语句可以知道如下内容：
+
+		①表的读取顺序。（对应id）
+
+		②数据读取操作的操作类型。（对应select_type）
+
+		③哪些索引可以使用。（对应possible_keys）
+
+		④哪些索引被实际使用。（对应key）
+
+		⑤表直接的引用。（对应ref）
+
+		⑥每张表有多少行被优化器查询。（对应rows）
+
+		B.explain包含的信息
+		explain使用：explain+sql语句，通过执行explain可以获得sql语句执行的相关信息。
+	}
+	
+	2) 创建唯一性索引
+		创建唯一性索引时，需要使用 UNIQUE 参数进行约束。
+		create table index2 (
+			id int,
+			name varchar(20),
+			unique index index2_id(id ASC)
+		                创建唯一索引  表的id字段 （ASC:升序/DESC:降序；两个是可选参数）
+		)engine=InnoDB character set utf8 collate utf8_bin;
+	
+	
+	3) 创建全文索引
+		全文索引只能创建在 （“char" or  "varchar" or "text" 类型的字段上，而且，现在只有 ((((MyISAM 存储引擎))))支持全文索引。
+		create table index3 (
+			id int,
+			info varchar(20),
+			fulltext index index3_info(info)
+			全文索引  index  索引名（字段名）
+		)engine=MyISAM character set utf8 collate utf8_bin;
+		在创建全文索引时一定要注意表的存储引擎的类型，对于经常需要索引的字符串、文字数据等信息，可以考虑存储到 MyISAM 存储引擎的表中。
+	
+	4) 创建单列索引
+		单列索引是在表的单个字段上创建索引。
+		create table index4 (
+			id int,
+			subject varchar(30),
+			index index4_su(subject(10))
+			单列索引  索引名 （字段名）      
+		)engine=InnoDB character set utf8 collate utf8_bin;
+		index4_st 索引的长度只有10，这样做的目的还是为了提高查询速度，对于字符型的数据，可以不用查询全部信息，而只查询其前面的若干字符信息。
+	
+	5) 创建多列索引
+		创建多列索引是在表的多个字段上创建一个索引，多列查询中，只有查询条件中使用了这些字段中第一个字段时，索引才会被使用。
+		create table index5 (
+			id int,
+			name varchar(20),
+			sex char(4),
+			index index5_ns(name,sex)
+			index  索引名 （索引的字段）
+		)engine=InnoDB character set utf8 collate utf8_bin;
+	
+	
+	6) 创建空间索引
+		创建空间索引时必须使用 spatial 参数来设置，创建空间索引时，表的存储引擎必须是 MyISAM 类型，而且，(((索引字段必须有非空约束)))。
+		create table index6 (
+			id int,
+			space geometry not null,
+			spatial index index6_sp(space)
+			空间索引  index  索引名(space字段）
+		)engine=MyISAM character set utf8 collate utf8_bin;
+	
+	
+2. 在已经存在的表上创建索引
+	在已经存在的表中，可以直接为表上的一个或几个字段创建索引，基本形式如下：
+	create [unique|fulltext|spatial] index 索引名 on 表名(属性名 [(长度)][ASC|DESC]);
+	其中：
+		UNIQUE 是可选参数，表示索引为唯一性索引；
+		FULLTEXT 是可选参数，表示索引为全文索引；
+		SPATIAL 也是可选参数，表示索引为空间索引；
+		“index” 参数用来指定字段为索引；
+		“索引名”参数是给创建的索引取的新名称；
+		“表名”参数是指需要创建索引的表的名称，该表必须是已经存在的，如果不存在，则需要先创建；
+		“属性名”参数指定索引对应的字段的名称，该字段必须为前面定义好的字段；
+		“长度”是可选参数，其指索引的长度，必须是字符串类型才可以使用；
+		ASC|DESC也是可选参数，表示“升序｜降序”排序。
+	
+	1) 创建普通索引
+		use 21dsj2;
+		create index index7_id on zuozhe(z_id);
+		creste   索引  索引名    在     表名（字段名）
+	2) 创建唯一性索引
+		create unique index index8_id on cjb1(xuhao);
+		create  唯一索引 index 索引名   on   表 （字段名）
+	3) 创建全文索引
+		create fulltext index index9_adr on zuozhe(addr);
+		create 全文索引 index 索引名 on  表名（字段名）
+	4) 创建单列索引
+		create index index10_addr on zuozhe(addr(4));
+		create 单行索引 索引名     on 表名 （字段名）
+	5) 创建多列索引
+		create index index11_na on zuozhe(name,addr);
+		 create 多列索引 索引名  on 表名（所需索引的字段名）
+	6) 创建空间索引
+		create spatial index index12_line on index12(line);
+		create 空间索引 index  索引名     on   表名（字段名）
+		注意：SPATIAL用来设置索引为空间索引，表index12的存储引擎必须是 MyISAM 类型，而且line字段必须是空间数据类型，而且是非空的。
+		
+
+3. 用 alter table 语句来创建索引
+	在已经存在的表上，可以通过 alter table 语句直接为表上的一个或几个字段创建索引，基本形式如：
+	alter table 表名 add [unique|fulltext|spatial] index 索引名 (属性名 [(长度)][ASC|DESC]);
+	
+	1) 创建普通索引
+		alter table example0 add index idx13_name(name(20));
+		alter table 表名    add  index  索引名 （索引字段名）
+	2) 创建唯一性索引
+		alter table example0 add unique index idx14_id(course_id);
+		alter table 表名   add  唯一索引  index  索引名（字段名）
+	3) 创建全文索引
+		alter table example0 add fulltext index idx15_info(info);
+		alter table 表名    add  全文索引  index   索引名  （字段名）
+	4) 创建单列索引
+		alter table example0 add index idx16_addr(address(4));
+		alter table 表名   add    单列索引  索引名（字段名）
+	5) 创建多列索引
+		alter table example0 add index idx17_na(name,address);
+		alter table 表名   add  多列索引  索引名（所需索引的字段名）
+	6) 创建空间索引
+		alter table index17 add spatial index idx18_line(line);
+		alter table 表名   add   空间索引  index  索引名（字段名）
+4. 删除索引
+	删除索引是指将表中已经存在的索引删除掉，一些不再使用的索引会降低表的更新速度，影响数据库的性能，对于这样的索引，应该将其删除。
+	对于已经存在的索引，可以通过 DROP 语句来删除索引，基本形式如下：
+	drop index 索引名 on 表名;
+	删除索引之前，先通过 show create table 表名; 语句来查看存在的索引的名称。
+	
+	
+
+
+
+
+
+
+
+select book.b_name,publiser.p_name from book,publiser where book.p_id=publiser.p_id;
+
+
+查看MySql数据库物理文件存放位置
+	show global variables like "%datadir%";
+
+
+
+
